@@ -1,0 +1,2 @@
+- name: 'authenticate with GH package registry'
+  run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GH_NPM_TOKEN }}" > ~/.npmrc
