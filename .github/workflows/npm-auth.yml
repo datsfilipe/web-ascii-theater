@@ -1,2 +1,32 @@
-name: 'authenticate with GH package registry'
-run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GH_NPM_TOKEN }}" > ~/.npmrc
+name: npm-auth
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  npm-auth:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: npm-auth
+        run: |
+          npm config set //npm.pkg.github.com/:_authToken ${{ secrets.GITHUB_TOKEN }}
+          npm config set @username:registry https://npm.pkg.github.com
+      - name: npm-install
+        run: npm install
+      - name: npm-publish
+        run: npm publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version'
+        required: true
+        default: 'patch'
