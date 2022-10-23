@@ -4,9 +4,10 @@ interface Props {
   width: number;
   height: number;
   customStyles?: React.CSSProperties;
+  fps?: number;
 }
 
-const BadApple = ({ width, height, customStyles }: Props) => {
+const BadApple = ({ width, height, customStyles, fps }: Props) => {
   const playerComponent = useRef<HTMLPreElement>(null)
 
   const symbols = '$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,"^`\'. '
@@ -86,7 +87,7 @@ const BadApple = ({ width, height, customStyles }: Props) => {
 
   useEffect(() => {
     const frames = 6572
-
+    const frameRate = fps || 30
     const canvas = document.getElementById('canvas') as HTMLCanvasElement
     const context = canvas.getContext('2d') as CanvasRenderingContext2D
     context.imageSmoothingEnabled = false
@@ -111,6 +112,8 @@ const BadApple = ({ width, height, customStyles }: Props) => {
 
             drawAsciiImage(grayScales, imgWidth)
           }
+
+          await new Promise((resolve) => setTimeout(resolve, 1000 / frameRate))
         }
       }
     }
