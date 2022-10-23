@@ -4,6 +4,10 @@
     "registry": "https://npm.pkg.github.com/datsfilipe"
   },
   "description": "React Bad Apple component.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/datsfilipe/react-bad-apple.git"
+  },
   "version": "1.0.0",
   "type": "module",
   "scripts": {
