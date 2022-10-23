@@ -1,7 +1,10 @@
 {
-  "name": "react-bad-apple",
-  "version": "1.0.0",
+  "name": "@datsfilipe/react-bad-apple",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/datsfilipe"
+  },
   "description": "React Bad Apple component.",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
