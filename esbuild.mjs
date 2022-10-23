@@ -14,10 +14,10 @@ esbuild.build({
   plugins: [
     nodeExternalsPlugin(),
     copy({
-      resolveFrom: 'cwd',
       assets: {
-        from: [ './src/assets/frames/*' ],
-        to: [ './dist/esm/assets/frames' ]
+        from: ['./src/assets/frames/**/*'],
+        to: ['./assets/frames'],
+        keepStructure: true
       }
     })
   ]
@@ -34,10 +34,10 @@ esbuild.build({
   plugins: [
     nodeExternalsPlugin(),
     copy({
-      resolveFrom: 'cwd',
       assets: {
-        from: [ './src/assets/frames/*' ],
-        to: [ './dist/cjs/assets/frames' ]
+        from: ['./src/assets/frames/**/*'],
+        to: ['./assets/frames'],
+        keepStructure: true
       }
     })
   ]
