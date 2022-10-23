@@ -93,6 +93,8 @@ const BadApple = ({ width, height, customStyles }: Props) => {
 
     const canvas = document.getElementById('canvas') as HTMLCanvasElement
     const context = canvas.getContext('2d') as CanvasRenderingContext2D
+    context.imageSmoothingEnabled = false
+    canvas.style.imageRendering = 'pixelated'
 
     const render = async () => {
       for (let i = 1; i <= frames; i++) {
