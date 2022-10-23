@@ -27,6 +27,7 @@
     "@vitejs/plugin-react": "^2.1.0",
     "esbuild": "^0.15.12",
     "esbuild-node-externals": "^1.5.0",
+    "esbuild-plugin-copy": "^1.6.0",
     "eslint": "^8.26.0",
     "eslint-plugin-react": "^7.31.10",
     "ffmpeg-extract-frames": "^2.0.2",
