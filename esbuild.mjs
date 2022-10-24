@@ -1,6 +1,5 @@
 import esbuild from 'esbuild'
 import { nodeExternalsPlugin } from 'esbuild-node-externals'
-import { copy } from 'esbuild-plugin-copy'
 
 esbuild.build({
   entryPoints: ['src/index.ts'],
@@ -11,16 +10,7 @@ esbuild.build({
   splitting: true,
   format: 'esm',
   target: 'esnext',
-  plugins: [
-    nodeExternalsPlugin(),
-    copy({
-      assets: {
-        from: ['./src/assets/frames/**/*'],
-        to: ['./assets/frames'],
-        keepStructure: true
-      }
-    })
-  ]
+  plugins: [nodeExternalsPlugin()]
 })
 
 esbuild.build({
@@ -31,14 +21,5 @@ esbuild.build({
   minify: true,
   format: 'cjs',
   target: 'esnext',
-  plugins: [
-    nodeExternalsPlugin(),
-    copy({
-      assets: {
-        from: ['./src/assets/frames/**/*'],
-        to: ['./assets/frames'],
-        keepStructure: true
-      }
-    })
-  ]
+  plugins: [nodeExternalsPlugin()]
 })
