@@ -12,6 +12,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "vite-build": "tsc && vite build",
+    "vite-preview": "vite preview",
     "ts-types": "tsc --emitDeclarationOnly --outDir dist",
     "build": "rimraf dist && node ./esbuild.mjs && npm run ts-types",
     "test": "echo \"Error: no test specified\" && exit 1"
