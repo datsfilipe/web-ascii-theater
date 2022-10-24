@@ -5,9 +5,10 @@ interface Props {
   height: number;
   customStyles?: React.CSSProperties;
   fps?: number;
+  framesDir: string;
 }
 
-const BadApple = ({ width, height, customStyles, fps }: Props) => {
+const BadApple = ({ width, height, customStyles, fps, framesDir }: Props) => {
   const playerComponent = useRef<HTMLPreElement>(null)
 
   const symbols = '$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,"^`\'. '
@@ -96,7 +97,7 @@ const BadApple = ({ width, height, customStyles, fps }: Props) => {
     const render = async () => {
       for (let i = 1; i <= frames; i++) {
         if (context && playerComponent.current) {
-          const img = await import(`../../assets/frames/frame-${i}.jpeg`)
+          const img = await import(`${framesDir}/frame-${i}.jpeg`)
           const image = new Image()
           image.src = img.default
 
