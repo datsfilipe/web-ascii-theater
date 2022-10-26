@@ -97,19 +97,17 @@ const BadApple = ({ width, height, customStyles, fps, framesDir, loop }: Props) 
 
     for (let i = 1; i <= frames; i++) {
       if (context && playerComponent.current) {
-        const response = await fetch(`${framesDir}/frame-${i}.jpeg`)
-        const blob = await response.blob()
-        const url = URL.createObjectURL(blob)
-        const image = new Image()
-        image.src = url
+        // fetch api is slow, so we use a trick to load images faster
+        const img = new Image()
+        img.src = `${framesDir}/frame-${i}.jpeg`
 
-        image.onload = () => {
-          const [imgWidth, imgHeight] = clampDimensions(image.width, image.height)
+        img.onload = () => {
+          const [imgWidth, imgHeight] = clampDimensions(img.width, img.height)
 
           canvas.width = imgWidth
           canvas.height = imgHeight
 
-          context.drawImage(image, 0, 0, imgWidth, imgHeight)
+          context.drawImage(img, 0, 0, imgWidth, imgHeight)
 
           const grayScales = transformIntoGrayScales(context, imgWidth, imgHeight)
 
