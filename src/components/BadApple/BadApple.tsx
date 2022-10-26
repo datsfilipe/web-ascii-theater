@@ -6,9 +6,10 @@ interface Props {
   customStyles?: React.CSSProperties;
   fps?: number;
   framesDir: string;
+  loop?: boolean;
 }
 
-const BadApple = ({ width, height, customStyles, fps, framesDir }: Props) => {
+const BadApple = ({ width, height, customStyles, fps, framesDir, loop }: Props) => {
   const playerComponent = useRef<HTMLPreElement>(null)
 
   const symbols = '$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,"^`\'. '
@@ -86,7 +87,7 @@ const BadApple = ({ width, height, customStyles, fps, framesDir }: Props) => {
     return [rectifiedWidth, height]
   }
 
-  useEffect(() => {
+  const render = async () => {
     const frames = 6572
     const frameRate = fps || 30
     const canvas = document.getElementById('canvas') as HTMLCanvasElement
@@ -94,31 +95,35 @@ const BadApple = ({ width, height, customStyles, fps, framesDir }: Props) => {
     context.imageSmoothingEnabled = false
     canvas.style.imageRendering = 'pixelated'
 
-    const render = async () => {
-      for (let i = 1; i <= frames; i++) {
-        if (context && playerComponent.current) {
-          const img = await import(`${framesDir}/frame-${i}.jpeg`)
-          const image = new Image()
-          image.src = img.default
+    for (let i = 1; i <= frames; i++) {
+      if (context && playerComponent.current) {
+        const img = await import(`${framesDir}/frame-${i}.jpeg`)
+        const image = new Image()
+        image.src = img.default
 
-          image.onload = () => {
-            const [imgWidth, imgHeight] = clampDimensions(image.width, image.height)
+        image.onload = () => {
+          const [imgWidth, imgHeight] = clampDimensions(image.width, image.height)
 
-            canvas.width = imgWidth
-            canvas.height = imgHeight
+          canvas.width = imgWidth
+          canvas.height = imgHeight
 
-            context.drawImage(image, 0, 0, imgWidth, imgHeight)
+          context.drawImage(image, 0, 0, imgWidth, imgHeight)
 
-            const grayScales = transformIntoGrayScales(context, imgWidth, imgHeight)
+          const grayScales = transformIntoGrayScales(context, imgWidth, imgHeight)
 
-            drawAsciiImage(grayScales, imgWidth)
-          }
+          drawAsciiImage(grayScales, imgWidth)
+        }
 
-          await new Promise((resolve) => setTimeout(resolve, 1000 / frameRate))
+        await new Promise((resolve) => setTimeout(resolve, 1000 / frameRate))
+
+        if (i === frames && loop) {
+          i = 0
         }
       }
     }
+  }
 
+  useEffect(() => {
     render()
   }, [])
 
