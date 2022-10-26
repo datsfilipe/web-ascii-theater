@@ -32,6 +32,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
           color: 'white',
           textAlign: 'center'
         }}
+        loop
       />
     </div>
   </React.StrictMode>
