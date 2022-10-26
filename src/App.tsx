@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom/client'
 import BadApple from './components/BadApple/BadApple'
 import './App.css'
 
-const currentDir = new URL('.', import.meta.url).pathname
-
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <div
@@ -19,7 +17,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <BadApple
         width={80}
         height={50}
-        framesDir={`${currentDir}assets/frames`}
+        framesDir={'/frames'}
         customStyles={{
           fontFamily: 'monospace',
           fontSize: '10px',
