@@ -97,9 +97,11 @@ const BadApple = ({ width, height, customStyles, fps, framesDir, loop }: Props) 
 
     for (let i = 1; i <= frames; i++) {
       if (context && playerComponent.current) {
-        const img = await import(`${framesDir}/frame-${i}.jpeg`)
+        const response = await fetch(`${framesDir}/frame-${i}.jpeg`)
+        const blob = await response.blob()
+        const url = URL.createObjectURL(blob)
         const image = new Image()
-        image.src = img.default
+        image.src = url
 
         image.onload = () => {
           const [imgWidth, imgHeight] = clampDimensions(image.width, image.height)
