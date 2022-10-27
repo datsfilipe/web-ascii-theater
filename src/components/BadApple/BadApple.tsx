@@ -1,15 +1,14 @@
 import { useEffect, useRef } from 'react'
 
 interface Props {
-  width: number;
-  height: number;
   customStyles?: React.CSSProperties;
-  fps?: number;
   framesDir: string;
   loop?: boolean;
+  width: number;
+  height: number;
 }
 
-const BadApple = ({ width, height, customStyles, fps, framesDir, loop }: Props) => {
+const BadApple = ({ customStyles, framesDir, loop, width, height }: Props) => {
   const playerComponent = useRef<HTMLPreElement>(null)
 
   const symbols = '$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,"^`\'. '
@@ -36,27 +35,6 @@ const BadApple = ({ width, height, customStyles, fps, framesDir, loop }: Props) 
     ctx.putImageData(imgData, 0, 0)
 
     return grayScales
-  }
-
-  const getSymbolByGrayScale = (grayScale: number) => {
-    const index = Math.floor(grayScale / 255 * (symbols.length - 1))
-    return symbols[index]
-  }
-
-  const drawAsciiImage = (grayScales: number[], imgWidth: number) => {
-    const ascii = grayScales.reduce((asciiImage, grayScale, index) => {
-      let nextChars = getSymbolByGrayScale(grayScale)
-
-      if ((index + 1) % imgWidth === 0) {
-        nextChars += '\n'
-      }
-
-      return asciiImage + nextChars
-    }, '')
-
-    if (playerComponent.current) {
-      playerComponent.current.textContent = ascii
-    }
   }
 
   const getFontRatio = () => {
@@ -87,51 +65,75 @@ const BadApple = ({ width, height, customStyles, fps, framesDir, loop }: Props) 
     return [rectifiedWidth, height]
   }
 
-  const render = async () => {
-    const frames = 6572
-    const frameRate = fps || 30
-    const canvas = document.getElementById('canvas') as HTMLCanvasElement
-    const context = canvas.getContext('2d') as CanvasRenderingContext2D
-    context.imageSmoothingEnabled = false
-    canvas.style.imageRendering = 'pixelated'
+  const getSymbolByGrayScale = (grayScale: number) => {
+    const index = Math.floor(grayScale / 255 * (symbols.length - 1))
+    return symbols[index]
+  }
 
-    for (let i = 1; i <= frames; i++) {
-      if (context && playerComponent.current) {
-        const img = fetch(`${framesDir}/frame-${i}.jpeg`)
-        const blob = await (await img).blob()
-        const imgURL = URL.createObjectURL(blob)
-        const image = new Image()
-        image.src = imgURL
+  const drawAsciiImage = (grayScales: number[], imgWidth: number) => {
+    const ascii = grayScales.reduce((asciiImage, grayScale, index) => {
+      let nextChars = getSymbolByGrayScale(grayScale)
 
-        image.onload = () => {
-          const [imgWidth, imgHeight] = clampDimensions(image.width, image.height)
+      if ((index + 1) % imgWidth === 0) {
+        nextChars += '\n'
+      }
 
-          canvas.width = imgWidth
-          canvas.height = imgHeight
+      return asciiImage + nextChars
+    }, '')
 
-          context.drawImage(image, 0, 0, imgWidth, imgHeight)
+    if (playerComponent.current) {
+      playerComponent.current.textContent = ascii
+    }
+  }
+  
+  const drawFrame = (frame: number) => {
+    const img = new Image()
+    img.src = `${framesDir}/frame-${frame}.jpeg`
 
-          const grayScales = transformIntoGrayScales(context, imgWidth, imgHeight)
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
 
-          drawAsciiImage(grayScales, imgWidth)
-        }
+      if (ctx) {
+        const [rectifiedWidth, rectifiedHeight] = clampDimensions(
+          img.width,
+          img.height
+        )
 
-        await new Promise((resolve) => setTimeout(resolve, 1000 / frameRate))
+        canvas.width = rectifiedWidth
+        canvas.height = rectifiedHeight
 
-        if (i === frames && loop) {
-          i = 1
-        }
+        ctx.drawImage(img, 0, 0, rectifiedWidth, rectifiedHeight)
+
+        const grayScales = transformIntoGrayScales(ctx, rectifiedWidth, rectifiedHeight)
+
+        drawAsciiImage(grayScales, rectifiedWidth)
       }
     }
   }
 
   useEffect(() => {
-    render()
+    let frame = 1
+
+    const interval = setInterval(() => {
+      drawFrame(frame)
+      
+      if (frame === 6572) {
+        if (loop) {
+          frame = 1
+        } else {
+          clearInterval(interval)
+        }
+      } else {
+        frame++
+      }
+    }, 1000 / 24)
+
+    return () => clearInterval(interval)
   }, [])
 
   return (
     <>
-      <canvas id="canvas" width={width} height={height} style={{ display: 'none' }} />
       <pre
         ref={playerComponent}
         style={{
