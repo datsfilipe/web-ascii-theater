@@ -97,8 +97,8 @@ const BadApple = ({ width, height, customStyles, fps, framesDir, loop }: Props) 
 
     for (let i = 1; i <= frames; i++) {
       if (context && playerComponent.current) {
-        const img = await fetch(`${framesDir}/frame-${i}.jpeg`)
-        const blob = await img.blob()
+        const img = fetch(`${framesDir}/frame-${i}.jpeg`)
+        const blob = await (await img).blob()
         const imgURL = URL.createObjectURL(blob)
         const image = new Image()
         image.src = imgURL
@@ -119,7 +119,7 @@ const BadApple = ({ width, height, customStyles, fps, framesDir, loop }: Props) 
         await new Promise((resolve) => setTimeout(resolve, 1000 / frameRate))
 
         if (i === frames && loop) {
-          i = 0
+          i = 1
         }
       }
     }
