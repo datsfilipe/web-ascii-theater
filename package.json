@@ -8,6 +8,9 @@
     "type": "git",
     "url": "https://github.com/datsfilipe/react-bad-apple.git"
   },
+  "bugs": {
+    "url": "https://github.com/datsfilipe/react-bad-apple/issues"
+  },
   "version": "1.1.0",
   "type": "module",
   "scripts": {
@@ -18,7 +21,11 @@
     "build": "rimraf dist && node ./esbuild.mjs && npm run ts-types",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "badapple",
+    "ascii",
+    "react"
+  ],
   "author": "datsfilipe",
   "license": "MIT",
   "devDependencies": {
