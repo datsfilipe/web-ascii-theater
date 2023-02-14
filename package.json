@@ -1,15 +1,15 @@
 {
-  "name": "@datsfilipe/react-bad-apple",
+  "name": "@datsfilipe/web-ascii-theater",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/datsfilipe"
   },
-  "description": "React Bad Apple component.",
+  "description": "Play ASCII animations on the web.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/datsfilipe/react-bad-apple.git"
+    "url": "https://github.com/datsfilipe/web-ascii-theater.git"
   },
   "bugs": {
-    "url": "https://github.com/datsfilipe/react-bad-apple/issues"
+    "url": "https://github.com/datsfilipe/web-ascii-theater/issues"
   },
   "version": "1.1.0",
   "type": "module",
@@ -19,12 +19,16 @@
     "vite-preview": "vite preview",
     "ts-types": "tsc --emitDeclarationOnly --outDir dist",
     "build": "rimraf dist && node ./esbuild.mjs && npm run ts-types",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "download": "node --experimental-modules src/scripts/download-vid.mjs",
+    "extract": "node --experimental-modules src/scripts/extract-frames.mjs"
   },
   "keywords": [
     "badapple",
     "ascii",
-    "react"
+    "ascii-art",
+    "react",
+    "animation"
   ],
   "author": "datsfilipe",
   "license": "MIT",
@@ -43,7 +47,8 @@
     "react-dom": "^18.2.0",
     "rimraf": "^3.0.2",
     "typescript": "^4.8.4",
-    "vite": "^3.1.0"
+    "vite": "^3.1.0",
+    "youtube-dl-exec": "^2.2.3"
   },
   "peerDependencies": {
     "react": "^18.2.0"
