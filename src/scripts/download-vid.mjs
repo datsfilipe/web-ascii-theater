@@ -14,7 +14,7 @@ async function downloadVideo(url) {
       noWarnings: true,
       preferFreeFormats: true,
       addHeader: ['referer:youtube.com', 'user-agent:googlebot'],
-      format: 134,
+      format: 160,
       output: path.join(downloadDir, 'video.%(ext)s'),
     })
 
