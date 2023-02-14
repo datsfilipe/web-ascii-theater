@@ -89,7 +89,7 @@ const AsciiTheater = ({ customStyles, framesDir, framesCount, loop, width, heigh
 
   const play = useCallback(async () => {
     const frame = new Image()
-    frame.src = `${framesDir}/frame-${currentFrame.current}.jpg`
+    frame.src = `${framesDir}/frame-${currentFrame.current}.jpeg`
 
     frame.onload = () => {
       const { width: imgWidth, height: imgHeight } = frame
