@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import BadApple from './components/BadApple/BadApple'
+import AsciiTheater from './components/AsciiTheater/AsciiTheater'
 import './App.css'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
@@ -14,13 +14,13 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         height: '100vh'
       }}
     >
-      <BadApple
+      <AsciiTheater
         width={80}
         height={50}
         framesDir={'/frames'}
+        framesCount={5498}
         customStyles={{
-          fontFamily: 'monospace',
-          fontSize: '10px',
+          fontSize: '9px',
           width: 'fit-content',
           height: 'fit-content',
           overflow: 'auto',
