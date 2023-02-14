@@ -17,3 +17,5 @@ await extractFrames({
   output: framesPath + '/frame-%d.jpeg',
   fps: 25,
 })
+
+export default extractFrames

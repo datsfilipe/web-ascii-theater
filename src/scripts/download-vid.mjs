@@ -35,3 +35,5 @@ rl.question('Insert video URL from YouTube: ', async (answer) => {
   console.log('Closing interface...')
   process.exit()
 })
+
+export default downloadVideo
