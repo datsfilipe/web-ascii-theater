@@ -18,7 +18,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         width={80}
         height={50}
         framesDir={'/frames'}
-        framesCount={5498}
+        framesCount={5478}
         customStyles={{
           fontSize: '9px',
           width: 'fit-content',
