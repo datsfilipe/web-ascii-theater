@@ -1,1 +1,1 @@
-export { default as BadApple } from './AsciiTheater'
+export { default as AsciiTheater } from './AsciiTheater'
