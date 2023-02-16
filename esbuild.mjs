@@ -7,7 +7,7 @@ esbuild.build({
   bundle: true,
   sourcemap: true,
   minify: true,
-  splitting: true,
+  splitting: false,
   format: 'esm',
   target: 'esnext',
   platform: 'node',
