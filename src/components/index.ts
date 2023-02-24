@@ -1,1 +1,1 @@
-export { default as AsciiTheater } from './AsciiTheater'
+export { default as AsciiTheater, finished, fps } from './AsciiTheater'

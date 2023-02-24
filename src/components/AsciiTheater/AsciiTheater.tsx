@@ -9,6 +9,9 @@ interface Props {
   height: number;
 }
 
+let finished = false
+const fps = 24
+
 const AsciiTheater = ({ customStyles, framesDir, framesCount, loop, width, height }: Props) => {
   const playerComponent = useRef<HTMLPreElement>(null)
   const symbols = '$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,"^`\'. '
@@ -101,6 +104,7 @@ const AsciiTheater = ({ customStyles, framesDir, framesCount, loop, width, heigh
       if (currentFrame.current === framesCount && loop) {
         currentFrame.current = 1
       } else if (currentFrame.current === framesCount) {
+        finished = true
         clearInterval(playInterval)
         return
       }
@@ -137,7 +141,7 @@ const AsciiTheater = ({ customStyles, framesDir, framesCount, loop, width, heigh
       } else {
         currentFrame.current += 1
       }
-    }, 1000 / 25)
+    }, 1000 / fps)
   }, [clampDimensions, drawAsciiImage, framesDir, loop, transformIntoGrayScale, canvas])
 
   useEffect(() => {
@@ -162,3 +166,5 @@ const AsciiTheater = ({ customStyles, framesDir, framesCount, loop, width, heigh
 }
 
 export default AsciiTheater
+export { finished }
+export { fps }
