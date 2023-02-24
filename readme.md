@@ -1,22 +1,30 @@
-# BadApple (or whatever you want to play)
+# Ascii Theater
 
-As it says, using this package you can play whatever video you want in React.js. Follow the steps to do it.
+As it says, using this package you can play whatever video you want in React.js as an Ascii animation. Follow the steps to do it.
 
 # Steps
-
-  - You just have to use the script inside [src/scripts/one-time-script.mjs](./src/scripts/one-time-script.mjs) or make your own to extract all frames from a video, then place them wherever you want;
-  - You need to specify the path for the frames, and or you use ``public`` folder inside your app, or it have to be an absolute path (ex. of getting current path using vite.js: new URL('.', import.meta.url).pathname), put the path in framesDir prop;
-  - Other props: width (horizontal pixels size), height (vertical pixels size) and fps (define framerate, it's optional but the standard is 30).
+  
+  - You can see the examples, in main repo inside "[src/scripts](./src/scripts)", of the scripts used to download the video and extract the frames;
+  - If you cannot see it in the main repo, you can try to find package folder inside your node_modules, the scripts will be there;
+  - You need to specify the path for the frames (recommend you to use ``public`` folder inside your app :));
+  - Some of the props are mandatory, like: framesDir, framesCount, width and height.
 
 # Usage
 
 ```jsx
-import { BadApple } from '@datsfilipe/react-bad-apple'
+import { AsciiTheater } from '@datsfilipe/web-ascii-theater'
 
 // ...
 return (
   // ...
-  <BadApple width={80} heigth={50} framesDir={/* path to your frames folder */} fps={43} />
+  <AsciiTheater
+    width={90}
+    height={50}
+    framesDir={/* path to your frames folder */}
+    framesCount={/* total frames/images in the folder */}
+    customStyles={/* add custom styles in object style */}
+    loop={true}
+  />
   // ...
 )
 ```
@@ -25,12 +33,15 @@ return (
 
   ```bash
 # npm
-  npm i @datsfilipe/react-bad-apple@latest
+  npm i @datsfilipe/web-ascii-theater@latest
 # pnpm
-  pnpm i @datsfilipe/react-bad-apple@latest
+  pnpm i @datsfilipe/web-ascii-theater@latest
 # yarn
-  yarn add @datsfilipe/react-bad-apple@latest
+  yarn add @datsfilipe/web-ascii-theater@latest
   ```
 
 # Showcase
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/3vilS05su_s/0.jpg)](https://www.youtube.com/watch?v=3vilS05su_s)
+
+You can see how it would be in here: [deploy](react-bad-apple.vercel.app).
+
+***Obs: you might experience some laggy, and some frames will be jumped in order to show the full animation quicker, since the other way could make you, or me, wait an eternity for the animation to end.***
