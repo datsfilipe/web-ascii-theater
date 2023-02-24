@@ -88,44 +88,56 @@ const AsciiTheater = ({ customStyles, framesDir, framesCount, loop, width, heigh
     }, [getSymbolByGrayScale])
 
   const play = useCallback(async () => {
+    let frameLoaded = true
+    
     const frame = new Image()
     frame.src = `${framesDir}/frame-${currentFrame.current}.jpg`
 
     frame.onload = () => {
-      const { width: imgWidth, height: imgHeight } = frame
-      const [rectifiedWidth, rectifiedHeight] = clampDimensions(imgWidth, imgHeight)
-      canvas.width = rectifiedWidth
-      canvas.height = rectifiedHeight
-
-      const context = canvas.getContext('2d', { willReadFrequently: true })
-      if (!context) return
-
-      context.drawImage(frame, 0, 0, rectifiedWidth, rectifiedHeight)
-      if (rectifiedWidth === 0) return
-
-      const imageData = context.getImageData(0, 0, rectifiedWidth, rectifiedHeight)
-
-      const grayScales = []
-
-      for (let i = 0; i < imageData.data.length; i += 4) {
-        const grayScale = wrapTransformIntoGrayScale(imageData, i)
-
-        grayScales.push(grayScale)
-      }
-
-      drawAsciiImage(grayScales, rectifiedWidth)
-
+      frameLoaded = true
+    }
+    
+    const playInterval = setInterval(() => {
       if (currentFrame.current === framesCount && loop) {
         currentFrame.current = 1
       } else if (currentFrame.current === framesCount) {
-        cancelAnimationFrame(animationFrame.current as number)
+        clearInterval(playInterval)
         return
+      }
+
+      if (frameLoaded) {
+        frameLoaded = false
+
+        const { width: imgWidth, height: imgHeight } = frame
+        const [rectifiedWidth, rectifiedHeight] = clampDimensions(imgWidth, imgHeight)
+        canvas.width = rectifiedWidth
+        canvas.height = rectifiedHeight
+
+        const context = canvas.getContext('2d', { willReadFrequently: true })
+        if (!context) return
+
+        context.drawImage(frame, 0, 0, rectifiedWidth, rectifiedHeight)
+        if (rectifiedWidth === 0) return
+
+        const imageData = context.getImageData(0, 0, rectifiedWidth, rectifiedHeight)
+
+        const grayScales = []
+
+        for (let i = 0; i < imageData.data.length; i += 4) {
+          const grayScale = wrapTransformIntoGrayScale(imageData, i)
+
+          grayScales.push(grayScale)
+        }
+
+        drawAsciiImage(grayScales, rectifiedWidth)
+
+        currentFrame.current += 1
+
+        frame.src = `${framesDir}/frame-${currentFrame.current}.jpg`
       } else {
         currentFrame.current += 1
       }
-
-      animationFrame.current = requestAnimationFrame(play)
-    }
+    }, 1000 / 25)
   }, [clampDimensions, drawAsciiImage, framesDir, loop, transformIntoGrayScale, canvas])
 
   useEffect(() => {
