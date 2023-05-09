@@ -1,38 +1,37 @@
 import React from 'react'
+import ReactDOM from 'react-dom/client'
 import AsciiTheater from './components/AsciiTheater/AsciiTheater'
 import './App.css'
 
-export default function App() {
-  return (
-    <React.StrictMode>
-      <div
-        className="App"
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh'
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <React.StrictMode>
+    <div
+      className="App"
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh'
+      }}
+    >
+      <AsciiTheater
+        width={80}
+        height={50}
+        framesDir={'/frames'}
+        framesCount={5478}
+        customStyles={{
+          fontSize: '12px',
+          width: 'fit-content',
+          height: 'fit-content',
+          overflow: 'auto',
+          margin: 0,
+          padding: 0,
+          backgroundColor: 'black',
+          color: 'white',
+          textAlign: 'center'
         }}
-      >
-        <AsciiTheater
-          width={80}
-          height={50}
-          framesDir={'/frames'}
-          framesCount={5478}
-          customStyles={{
-            fontSize: '14px',
-            width: 'fit-content',
-            height: 'fit-content',
-            overflow: 'auto',
-            margin: 0,
-            padding: 0,
-            backgroundColor: 'black',
-            color: 'white',
-            textAlign: 'center'
-          }}
-          loop
-        />
-      </div>
-    </React.StrictMode>
-  )
-}
+        loop
+      />
+    </div>
+  </React.StrictMode>
+)
