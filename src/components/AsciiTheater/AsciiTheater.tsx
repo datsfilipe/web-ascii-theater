@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo, useCallback } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface Props {
   customStyles?: React.CSSProperties;
@@ -10,31 +10,28 @@ interface Props {
 }
 
 let finished = false
-const fps = 24
+const symbols = '$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,"^`\'. '
+const fps = 60
 
 const AsciiTheater = ({ customStyles, framesDir, framesCount, loop, width, height }: Props) => {
+  const canvas = useRef<HTMLCanvasElement>(null)
   const playerComponent = useRef<HTMLPreElement>(null)
-  const symbols = '$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,"^`\'. '
-  const animationFrame = useRef<number | null>(null)
   const currentFrame = useRef(1)
   const [fontRatio, setFontRatio] = useState(0)
-  const canvas = document.createElement('canvas')
-  
+
   useEffect(() => {
-    if (playerComponent.current) {
-      const pre = document.createElement('pre')
-      pre.style.display = 'inline'
-      pre.textContent = ' '
+    const pre = document.createElement('pre')
+    pre.style.display = 'inline'
+    pre.textContent = ' '
   
-      document.body.appendChild(pre)
-      const { width, height } = pre.getBoundingClientRect()
-      document.body.removeChild(pre)
+    document.body.appendChild(pre)
+    const { width, height } = pre.getBoundingClientRect()
+    document.body.removeChild(pre)
   
-      setFontRatio(height / width)
-    }
+    setFontRatio(height / width)
   }, [setFontRatio])
 
-  const clampDimensions = useMemo(() => (imgWidth: number, imgHeight: number) => {
+  const clampDimensions = (imgWidth: number, imgHeight: number) => {
     const rectifiedWidth = Math.floor(fontRatio * imgWidth)
   
     if (imgHeight > height) {
@@ -48,14 +45,11 @@ const AsciiTheater = ({ customStyles, framesDir, framesCount, loop, width, heigh
     }
   
     return [rectifiedWidth, height]
-  }, [fontRatio, height, width])
+  }
   
-  const transformIntoGrayScale = useMemo(
-    () => (r: number, g: number, b: number) => Math.floor(0.2126 * r + 0.7152 * g + 0.0722 * b),
-    []
-  )
+  const transformIntoGrayScale = (r: number, g: number, b: number) => Math.floor(0.2126 * r + 0.7152 * g + 0.0722 * b)
 
-  const wrapTransformIntoGrayScale = useMemo(() => (imageData: ImageData, index: number) => {
+  const wrapTransformIntoGrayScale = (imageData: ImageData, index: number) => {
     const r: number = imageData.data[index]
     const g: number = imageData.data[index + 1]
     const b: number = imageData.data[index + 2]
@@ -63,105 +57,92 @@ const AsciiTheater = ({ customStyles, framesDir, framesCount, loop, width, heigh
     const grayScale = transformIntoGrayScale(r, g, b)
 
     return grayScale
-  }, [])
+  }
   
-  const getSymbolByGrayScale = useMemo(
-    () => (grayScale: number) => {
-      const index = Math.floor(grayScale / 255 * (symbols.length - 1))
-      return symbols[index]
-    },
-    [symbols]
-  )
+  const getSymbolByGrayScale = (grayScale: number) => {
+    const index = Math.floor(grayScale / 255 * (symbols.length - 1))
+    return symbols[index]
+  }
   
-  const drawAsciiImage = useMemo(
-    () => (grayScales: number[], imgWidth: number) => {
-      const ascii = grayScales.reduce((asciiImage, grayScale, index) => {
-        let nextChars = getSymbolByGrayScale(grayScale)
-  
-        if ((index + 1) % imgWidth === 0) {
-          nextChars += '\n'
-        }
-  
-        return asciiImage + nextChars
-      }, '')
-  
-      if (playerComponent.current) {
-        playerComponent.current.textContent = ascii
+  const drawAsciiImage = (grayScales: number[], imgWidth: number) => {
+    const ascii = grayScales.reduce((asciiImage, grayScale, index) => {
+      let nextChars = getSymbolByGrayScale(grayScale)
+
+      if ((index + 1) % imgWidth === 0) {
+        nextChars += '\n'
       }
-    }, [getSymbolByGrayScale])
 
-  const play = useCallback(async () => {
-    let frameLoaded = true
-    
-    const frame = new Image()
-    frame.src = `${framesDir}/frame-${currentFrame.current}.jpg`
+      return asciiImage + nextChars
+    }, '')
 
-    frame.onload = () => {
-      frameLoaded = true
+    if (playerComponent.current) {
+      playerComponent.current.textContent = ascii
     }
-    
-    const playInterval = setInterval(() => {
-      if (currentFrame.current === framesCount && loop) {
-        currentFrame.current = 1
-      } else if (currentFrame.current === framesCount) {
-        finished = true
-        clearInterval(playInterval)
-        return
-      }
+  }
 
-      if (frameLoaded) {
-        frameLoaded = false
+  const playFrame = (frame: HTMLImageElement, context: CanvasRenderingContext2D) => {
+    const [clampedWidth, clampedHeight] = clampDimensions(frame.width, frame.height)
+    if (!clampedWidth || !clampedHeight) return
 
-        const { width: imgWidth, height: imgHeight } = frame
-        const [rectifiedWidth, rectifiedHeight] = clampDimensions(imgWidth, imgHeight)
-        canvas.width = rectifiedWidth
-        canvas.height = rectifiedHeight
+    if (canvas.current) {
+      canvas.current.width = clampedWidth
+      canvas.current.height = clampedHeight
+    }
 
-        const context = canvas.getContext('2d', { willReadFrequently: true })
-        if (!context) return
+    context.drawImage(frame, 0, 0, clampedWidth, clampedHeight)
 
-        context.drawImage(frame, 0, 0, rectifiedWidth, rectifiedHeight)
-        if (rectifiedWidth === 0) return
+    const imageData = context.getImageData(0, 0, clampedWidth, clampedHeight)
+    const grayScales = []
 
-        const imageData = context.getImageData(0, 0, rectifiedWidth, rectifiedHeight)
+    for (let i = 0; i < imageData.data.length; i += 4) {
+      const grayScale = wrapTransformIntoGrayScale(imageData, i)
+      grayScales.push(grayScale)
+    }
 
-        const grayScales = []
+    drawAsciiImage(grayScales, clampedWidth)
+  }
 
-        for (let i = 0; i < imageData.data.length; i += 4) {
-          const grayScale = wrapTransformIntoGrayScale(imageData, i)
+  const play = () => {
+    const context = canvas.current?.getContext('2d', { alpha: false, willReadFrequently: true })
 
-          grayScales.push(grayScale)
-        }
+    if (context && framesCount && framesCount > 0) {
+      const frameIndex = currentFrame.current % framesCount
+      const img = new Image()
+      img.src = `${framesDir}/frame-${frameIndex}.jpg`
+      img.onload = () => playFrame(img, context)
 
-        drawAsciiImage(grayScales, rectifiedWidth)
+      currentFrame.current += 1
 
-        currentFrame.current += 1
-
-        frame.src = `${framesDir}/frame-${currentFrame.current}.jpg`
+      if (currentFrame.current <= framesCount || loop) {
+        setTimeout(() => play(), framesCount / fps)
       } else {
-        currentFrame.current += 1
+        return finished = true
       }
-    }, 1000 / fps)
-  }, [clampDimensions, drawAsciiImage, framesDir, loop, transformIntoGrayScale, canvas])
+    }
+  }
 
   useEffect(() => {
     play()
+
     return () => {
-      cancelAnimationFrame(animationFrame.current as number)
+      finished = false
     }
-  }, [play])
+  }, [canvas, framesDir, framesCount, loop, play])
 
   return (
-    <pre
-      ref={playerComponent}
-      style={{
-        ...customStyles,
-        display: 'block',
-        whiteSpace: 'pre',
-        margin: 0,
-        overflow: 'hidden',
-      }}
-    />
+    <>
+      <canvas ref={canvas} width={width} height={height} style={{ display: 'none' }} />
+      <pre
+        ref={playerComponent}
+        style={{
+          ...customStyles,
+          display: 'block',
+          overflow: 'hidden',
+          whiteSpace: 'pre',
+          margin: 0,
+        }}
+      />
+    </>
   )
 }
 
