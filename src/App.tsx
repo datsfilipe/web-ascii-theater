@@ -1,10 +1,7 @@
 import React from 'react'
-import ReactDOM from 'react-dom/client'
 import AsciiTheater from './components/AsciiTheater/AsciiTheater'
 import './App.css'
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
     <div
       className="App"
       style={{
@@ -29,9 +26,13 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
           backgroundColor: 'black',
           color: 'white',
           textAlign: 'center'
+export default function App() {
+  return (
+    <React.StrictMode>
         }}
         loop
       />
     </div>
-  </React.StrictMode>
-)
+    </React.StrictMode>
+  )
+}
