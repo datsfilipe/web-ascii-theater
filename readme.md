@@ -43,5 +43,3 @@ return (
 # Showcase
 
 You can see how it would be in here: [deploy](https://react-bad-apple.vercel.app).
-
-***Obs: you might experience some laggy, and some frames will be jumped in order to show the full animation quicker, since the other way could make you, or me, wait an eternity for the animation to end.***
