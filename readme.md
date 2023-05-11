@@ -2,6 +2,10 @@
 
 As it says, using this package you can play whatever video you want in React.js as an Ascii animation. Follow the steps to do it.
 
+# Showcase
+
+You can see how it would be in here: [deploy](https://react-bad-apple.vercel.app).
+
 # Steps
   
   - You can see the examples, in main repo inside "[src/scripts](./src/scripts)", of the scripts used to download the video and extract the frames;
@@ -39,7 +43,3 @@ return (
 # yarn
   yarn add @datsfilipe/web-ascii-theater@latest
   ```
-
-# Showcase
-
-You can see how it would be in here: [deploy](https://react-bad-apple.vercel.app).
