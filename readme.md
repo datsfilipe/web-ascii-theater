@@ -37,9 +37,9 @@ return (
 
   ```bash
 # npm
-  npm i @datsfilipe/web-ascii-theater@latest
+  npm i https://github.com/datsfilipe/web-ascii-theater.git
 # pnpm
-  pnpm i @datsfilipe/web-ascii-theater@latest
+  pnpm i https://github.com/datsfilipe/web-ascii-theater.git
 # yarn
-  yarn add @datsfilipe/web-ascii-theater@latest
+  yarn add https://github.com/datsfilipe/web-ascii-theater.git
   ```
